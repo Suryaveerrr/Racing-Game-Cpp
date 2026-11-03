@@ -33,13 +33,13 @@ INITIALISATION
 void GameController::Init()
 {
 
-    grassColA = sf::Color(144,166, 111);
+    grassColA = sf::Color(144, 166, 111);
     grassColB = sf::Color(123, 142, 95);
     rumbleColA = sf::Color(255, 0, 0);
     rumbleColB = sf::Color(255, 255, 255);
 
     trackColA = sf::Color(20, 20, 20);
-    trackColB = sf::Color(40, 40 , 40);
+    trackColB = sf::Color(40, 40, 40);
 
     LoadTextures();
     LoadLevelData();
@@ -53,11 +53,11 @@ void GameController::Init()
 
     // start game straight away 
     gameRunning = true;
-   
+
 }
 
 /*
-* 
+*
 * LoadLevelData will populate the track data according to the currnetly selected track 'trackSelected'
 */
 void GameController::LoadLevelData()
@@ -72,7 +72,8 @@ void GameController::LoadLevelData()
         curveDataPath = "Assets/Level1TrackCurveData.csv";
         spriteDataPath = "Assets/Level1SpriteData.csv";
 
-    }else if (trackSelected == TrackData::Track2)
+    }
+    else if (trackSelected == TrackData::Track2)
     {
         yDataPath = "Assets/Level2TrackYData.csv";
         curveDataPath = "Assets/Level2TrackCurveData.csv";
@@ -97,24 +98,24 @@ void GameController::LoadLevelData()
 
     // Read from the text file
     std::ifstream levelYDataFile(yDataPath);
- 
+
 
     std::string fileLine;
 
     levelData.y.assign(trackLength, 0.f);
     levelData.curve.assign(trackLength, 0.f);
-   
-    
+
+
     int i = 0;
 
     while (std::getline(levelYDataFile, fileLine)) {
-       
+
         levelData.y[i] = std::stof(fileLine);
         i++;
-       
+
     }
 
- 
+
     levelYDataFile.close();
 
 
@@ -147,11 +148,12 @@ void GameController::LoadLevelData()
             start = end + 1;
         }
         result.push_back(fileLine.substr(start));
-       
+
         if (result.size() != 3)
         {
             std::cout << "ERROR parsing level sprite data" << std::endl;
-        }else {
+        }
+        else {
 
             lsd.seg = std::stof(result[0]);
             lsd.spriteID = std::stof(result[1]);
@@ -159,7 +161,7 @@ void GameController::LoadLevelData()
 
             levelData.sprites.push_back(lsd);
         }
-       
+
 
     }
 
@@ -188,8 +190,8 @@ void GameController::InitTrack()
         Segment s;
 
         s.curve = levelData.curve[i];
-        s.y = levelData.y[i]*100; // convert to world units
- 
+        s.y = levelData.y[i] * 100; // convert to world units
+
 
 
         if (i % 2 == 0)
@@ -204,7 +206,7 @@ void GameController::InitTrack()
             s.rumbleColour = rumbleColB;
             s.grassColour = grassColB;
         }
-      
+
 
 
         std::vector<LevelSpriteData> segSprites = getLevelSpriteDataForSegment(i);
@@ -218,16 +220,16 @@ void GameController::InitTrack()
             si.texture = GetTextureByID(ss.spriteID);
 
             s.sprites.push_back(si);
-             
+
         }
-     
+
 
         track.segments.push_back(s);
 
     }
 
     track.segmentLength = segmentLen;
- 
+
 }
 
 
@@ -279,7 +281,7 @@ void GameController::InitCars()
         c.isPlayer = false;
 
         // if more than 2 cars, stagger the Z like a grid
-        c.z = (4+(i/2)) * segmentLen;
+        c.z = (4 + (i / 2)) * segmentLen;
 
         if (i % 2 == 0)
             c.x = -0.5;
@@ -314,11 +316,11 @@ void GameController::InitAI()
 
 void GameController::SetupDrivers()
 {
- 
+
     // to add more drivers, update driverNames and driverAIMethod. Both must be the same length.
 
-    std::vector<std::string> driverNames = { "RBS Driver", "FSM Driver"};
-    std::vector<AIControllerType> driverAIMethod = { AIControllerType::RBS, AIControllerType::FSM};
+    std::vector<std::string> driverNames = { "RBS Driver", "FSM Driver" };
+    std::vector<AIControllerType> driverAIMethod = { AIControllerType::RBS, AIControllerType::FSM };
 
     if (driverNames.size() != cars.size() || driverAIMethod.size() != cars.size())
     {
@@ -328,7 +330,7 @@ void GameController::SetupDrivers()
 
     for (int d = 0; d < numCars; d++)
     {
-           CreateAIDriver(driverNames[d], cars[d], driverAIMethod[d]);
+        CreateAIDriver(driverNames[d], cars[d], driverAIMethod[d]);
     }
 
 
@@ -351,9 +353,9 @@ void GameController::CreateAIDriver(std::string _actorID, Car& _car, AIControlle
     }
     else if (_aiController == AIControllerType::RBS)
     {
-        _d->Init(_actorID,rbsAIConstructor);
+        _d->Init(_actorID, rbsAIConstructor);
         _car.texture = &textureCarYellow[2];
-        
+
 
     }
     else
@@ -370,7 +372,7 @@ void GameController::CreateAIDriver(std::string _actorID, Car& _car, AIControlle
     _d->AddBBValue("TrackCentrePos", 0);
     _d->SetGameContext(*this);
 
-    
+
     drivers.push_back(_d);
 
 }
@@ -391,10 +393,12 @@ sf::Texture* GameController::GetTextureByID(int ID)
     if (ID == 0)
     {
         return &textureOil;
-    }else if (ID == 1)
+    }
+    else if (ID == 1)
     {
         return &textureBollards;
-    }else if (ID == 2)
+    }
+    else if (ID == 2)
     {
         return &textureTrash;
     }
@@ -498,7 +502,7 @@ int GameController::GetSteerZone(float steerAxis)
 
 /*
 
-INPUT 
+INPUT
 
 */
 
@@ -508,12 +512,12 @@ INPUT
 void GameController::HandleKeyPress(const sf::Event::KeyPressed* _keyPress)
 {
 
-   
+
     if (!gameRunning)
         return;
 
 
-       
+
     else if (_keyPress->code == sf::Keyboard::Key::Up)
     {
         activeCameraCar = ++activeCameraCar % numCars;
@@ -523,11 +527,11 @@ void GameController::HandleKeyPress(const sf::Event::KeyPressed* _keyPress)
     {
         activeCameraCar = activeCameraCar - 1;
         if (activeCameraCar < 0)
-            activeCameraCar = numCars-1;
+            activeCameraCar = numCars - 1;
 
     }
 
-    
+
 
 }
 
@@ -607,7 +611,7 @@ void GameController::RenderWorld(sf::RenderWindow& window, Track& track, const C
     ComputeCurveOffsets(track, _baseSegment);
     DrawSkyAndHorizon(window, cam);
     DrawRoad(window, track, cam, _baseSegment);
- 
+
 }
 
 /*
@@ -634,7 +638,7 @@ DrawRoad will render the road and every item along it, including cars
 */
 void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Camera& cam, int baseSegment)
 {
-  
+
 
     ProjectedPoint prevP{};
 
@@ -655,7 +659,7 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
 
             if (baseSegment + n == trackLength - 1)
             {
-            
+
                 int segs = 10;
 
                 float segWidth1 = abs(prevP.screenX + prevP.width) / segs;
@@ -665,12 +669,12 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
                 for (int f = 0; f < segs; f++)
                 {
                     sf::ConvexShape quad(4);
-                    quad.setPoint(0, { prevP.screenX - prevP.width + (segWidth1 * f) , prevP.screenY});
-                    quad.setPoint(1, { prevP.screenX - prevP.width + (segWidth1 * (f+1)), prevP.screenY });
-                    quad.setPoint(2, { p.screenX - p.width+(segWidth2 * (f+1)), p.screenY });
-                    quad.setPoint(3, { p.screenX - p.width+ (segWidth2 * f) , p.screenY });
+                    quad.setPoint(0, { prevP.screenX - prevP.width + (segWidth1 * f) , prevP.screenY });
+                    quad.setPoint(1, { prevP.screenX - prevP.width + (segWidth1 * (f + 1)), prevP.screenY });
+                    quad.setPoint(2, { p.screenX - p.width + (segWidth2 * (f + 1)), p.screenY });
+                    quad.setPoint(3, { p.screenX - p.width + (segWidth2 * f) , p.screenY });
 
-                    if(f%2==0)
+                    if (f % 2 == 0)
                         quad.setFillColor(sf::Color::White);
                     else
                         quad.setFillColor(sf::Color::Black);
@@ -678,8 +682,8 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
                     window.draw(quad);
                 }
 
-               
-            
+
+
             }
             else
             {
@@ -693,7 +697,7 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
             }
 
 
-            float rWidth =   p.scale * rumbleWidth * screenW / 2.f;
+            float rWidth = p.scale * rumbleWidth * screenW / 2.f;
 
             // draw the left rumble
             sf::ConvexShape rumbleQuadL(4);
@@ -701,7 +705,7 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
             rumbleQuadL.setPoint(1, { prevP.screenX - prevP.width, prevP.screenY });
             rumbleQuadL.setPoint(2, { p.screenX - p.width, p.screenY });
             rumbleQuadL.setPoint(3, { p.screenX - p.width - rWidth, p.screenY });
-            
+
             rumbleQuadL.setFillColor(seg.rumbleColour);
             window.draw(rumbleQuadL);
 
@@ -716,7 +720,7 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
             window.draw(rumbleQuadR);
 
             // draw the left grass
-           sf::ConvexShape grassQuadL(4);
+            sf::ConvexShape grassQuadL(4);
             grassQuadL.setPoint(0, { 0, prevP.screenY });
             grassQuadL.setPoint(1, { prevP.screenX - prevP.width - rWidth, prevP.screenY });
             grassQuadL.setPoint(2, { p.screenX - p.width - rWidth, p.screenY });
@@ -751,40 +755,40 @@ void GameController::DrawRoad(sf::RenderWindow& window, Track& track, const Came
         for (auto& car : cars)
         {
 
-     
-                if (track.SegmentIndexAt(car.z) == (baseSegment + n) % track.segments.size())
+
+            if (track.SegmentIndexAt(car.z) == (baseSegment + n) % track.segments.size())
+            {
+
+                float curTrackX = renderContext.curveOffsetX[n];
+                float nextTrackX = renderContext.curveOffsetX[std::min(n + 1, drawDistanceInSegments - 1)];
+
+                float percent = std::fmod(car.z, track.segmentLength) / track.segmentLength;
+
+                float carCurveX = std::lerp(curTrackX, nextTrackX, percent);
+
+
+
+                float worldX = car.x * roadHalfWidth + carCurveX;
+
+                float curTrackHeight = track.segments[(baseSegment + n) % track.segments.size()].y;
+                float nextTtrackHeight = track.segments[(baseSegment + n + 1) % track.segments.size()].y;
+
+                float carY = std::lerp(curTrackHeight, nextTtrackHeight, percent);
+
+
+                DrawScaledSprite(window, car.texture, worldX, carY, car.z, cam);
+
+
+                if (car.isActiveCollision)
                 {
-
-                   float curTrackX = renderContext.curveOffsetX[n];
-                   float nextTrackX = renderContext.curveOffsetX[std::min(n+1, drawDistanceInSegments -1)];
-
-                   float percent = std::fmod(car.z, track.segmentLength) / track.segmentLength;
-
-                    float carCurveX = std::lerp(curTrackX, nextTrackX, percent);
-
-
-
-                    float worldX = car.x * roadHalfWidth  + carCurveX;
-
-                    float curTrackHeight = track.segments[(baseSegment + n ) % track.segments.size()].y;
-                    float nextTtrackHeight = track.segments[(baseSegment + n + 1 )% track.segments.size()].y;
-
-                    float carY =  std::lerp(curTrackHeight, nextTtrackHeight, percent) ;
-
-
-                    DrawScaledSprite(window, car.texture, worldX, carY, car.z, cam);
-
-
-                    if (car.isActiveCollision)
-                    {
-                        DrawScaledSprite(window, &textureExplosion, worldX, carY, car.z, cam);
-                    }
-
-                    if (car.isActiveRumble)
-                    {
-                        DrawScaledSprite(window, &textureDust, worldX, carY, car.z, cam);
-                    }
+                    DrawScaledSprite(window, &textureExplosion, worldX, carY, car.z, cam);
                 }
+
+                if (car.isActiveRumble)
+                {
+                    DrawScaledSprite(window, &textureDust, worldX, carY, car.z, cam);
+                }
+            }
 
         }
 
@@ -805,7 +809,7 @@ void GameController::DrawScaledSprite(sf::RenderWindow& window, sf::Texture* tex
     sprite.setOrigin(sf::Vector2f(tex->getSize().x / 2.f, tex->getSize().y));
     sprite.setPosition(sf::Vector2f(p.screenX, p.screenY));
 
-   // std::cout << "SPRITE at scale " << scale << " at pos " << p.screenX << "," << p.screenY << std::endl;
+    // std::cout << "SPRITE at scale " << scale << " at pos " << p.screenX << "," << p.screenY << std::endl;
 
     window.draw(sprite);
 }
@@ -829,12 +833,12 @@ void GameController::DrawPlayerCollideSprite(sf::RenderWindow& window, sf::Textu
 // UNUSED AT PRESENT - used for player conroller cars
 void GameController::DrawPlayerCarSprite(sf::RenderWindow& window, sf::Texture* tex, const Camera& cam)
 {
-   
+
     sf::Sprite sprite(*tex);
 
 
     sprite.setOrigin(sf::Vector2f(tex->getSize().x / 2.f, tex->getSize().y));
-    sprite.setPosition(sf::Vector2f(screenW / 2.f,  screenH- carTrackY));
+    sprite.setPosition(sf::Vector2f(screenW / 2.f, screenH - carTrackY));
 
     // std::cout << "SPRITE at scale " << scale << " at pos " << p.screenX << "," << p.screenY << std::endl;
 
@@ -863,7 +867,7 @@ void GameController::DrawHUD(sf::RenderWindow& window, const Camera& cam)
 
     std::string xText2 = " - ";
 
-    
+
     xText2.append(" speed : ");
     xText2.append(std::to_string((int)cars[activeCameraCar].speed));
     xText2.append(" collisions : ");
@@ -897,17 +901,17 @@ void GameController::UpdateCamera(Camera& cam, Track& track, float dt)
     cam.speed = cars[activeCameraCar].inputAccelAxis;
     cam.position = cars[activeCameraCar].z - cameraFollowDist;
 
-    if(renderContext.curveOffsetX.size()>0)
+    if (renderContext.curveOffsetX.size() > 0)
         camCurveX += renderContext.curveOffsetX[0] * dt;
 
     // move camera forward
     cam.position += cam.speed * dt;
 
-    
+
     //  to ensure smooth tracking, lerp between the current and next segemnt height
     int _baseSegment = track.SegmentIndexAt(cam.position);
     float trackHeight = track.segments[_baseSegment % track.segments.size()].y;
-    float nextTtrackHeight = track.segments[(_baseSegment + 1 )% track.segments.size()].y;
+    float nextTtrackHeight = track.segments[(_baseSegment + 1) % track.segments.size()].y;
     float percent = std::fmod(cam.position, track.segmentLength) / track.segmentLength;
 
     cam.cameraHeight = std::lerp(trackHeight, nextTtrackHeight, percent) + cameraH;
@@ -918,14 +922,14 @@ void GameController::UpdateCamera(Camera& cam, Track& track, float dt)
         cam.position = cam.position -= track.TotalLength();
     }
 
-    
+
 }
 
 // UNUSED AT PRESENT
 void GameController::UpdatePlayerSteering(Camera& cam, float dt)
 {
 
-    int _camSeg = track.SegmentIndexAt(cam.position); 
+    int _camSeg = track.SegmentIndexAt(cam.position);
     cam.playerX = cars[activeCameraCar].x;
 
 
@@ -933,7 +937,7 @@ void GameController::UpdatePlayerSteering(Camera& cam, float dt)
 
 /*
 * isRaceOver will return true if all cars have completed the track, otherwise false
-*/ 
+*/
 bool GameController::isRaceOver()
 {
 
@@ -950,21 +954,21 @@ bool GameController::isRaceOver()
 /*
 UpdateOpponents will update all AI driver's cars based on their steer and acceleration axis
 */
-void GameController::UpdateOpponents( float dt)
+void GameController::UpdateOpponents(float dt)
 {
-    for (auto &c : cars)
+    for (auto& c : cars)
     {
 
         if (!c.isActive)
             continue;
-           
+
         int _camSeg = track.SegmentIndexAt(c.z);
         int _steerZone = GetSteerZone(c.inputSteerAxis);
 
         // update the sprite to match the steering angle
         if (_steerZone != c.steerZone)
         {
-            if(c.controllerMethod==(int)AIControllerType::FSM)
+            if (c.controllerMethod == (int)AIControllerType::FSM)
                 c.texture = &textureCarRed[_steerZone];
             else  if (c.controllerMethod == (int)AIControllerType::RBS)
                 c.texture = &textureCarYellow[_steerZone];
@@ -974,7 +978,7 @@ void GameController::UpdateOpponents( float dt)
 
 
         // change speed based on the car's accel axis value
-        c.speed += c.inputAccelAxis*dt;
+        c.speed += c.inputAccelAxis * dt;
 
         if (c.speed > aiMaxSpeed)
             c.speed = aiMaxSpeed;
@@ -990,11 +994,11 @@ void GameController::UpdateOpponents( float dt)
         if (c.x * roadHalfWidth >= rumbleBound || c.x * roadHalfWidth <= -rumbleBound)
         {
             c.isActiveRumble = true;
-        
+
 
 
             if (c.speed > rumbleMaxSpeed)
-                c.speed -= rumbleDecelSpeed*dt;
+                c.speed -= rumbleDecelSpeed * dt;
 
         }
         else
@@ -1007,7 +1011,7 @@ void GameController::UpdateOpponents( float dt)
         c.z += c.speed * dt;
 
         // move car left/right based on steering axis
-        c.x += c.inputSteerAxis*dt;
+        c.x += c.inputSteerAxis * dt;
 
 
         // gradually return the steer axis to the centre zone
@@ -1017,24 +1021,24 @@ void GameController::UpdateOpponents( float dt)
         }
         else  if (c.inputAccelAxis < -steerCentreBuffer)
         {
-            c.inputSteerAxis =+ steerBalance * dt;
+            c.inputSteerAxis = +steerBalance * dt;
 
         }
-       
+
 
         // apply a drift on cornering to pull car
 
         float _speedRatio = c.speed / aiMaxSpeed;
 
         float _drift = track.segments[_camSeg % track.segments.size()].curve * centreForce * _speedRatio * dt;
-        c.x -= _drift ;
+        c.x -= _drift;
 
         // if car is skilling, apply affect
-       if (c.isSkidding)
+        if (c.isSkidding)
         {
 
-           // skid a random amount
-           float _skidAmount = AIRandom_Global::getInstance()->GetRandomFloat(collideOilSkidMin, collideOilSkidMax);
+            // skid a random amount
+            float _skidAmount = AIRandom_Global::getInstance()->GetRandomFloat(collideOilSkidMin, collideOilSkidMax);
             if (c.inputSteerAxis >= 0)
                 c.x += _skidAmount * dt;
             else  if (c.inputSteerAxis < 0)
@@ -1042,13 +1046,13 @@ void GameController::UpdateOpponents( float dt)
 
         }
 
-       // check bounds
+        // check bounds
         if (c.x > carXBound)
             c.x = carXBound;
         else if (c.x < -carXBound)
             c.x = -carXBound;
-         
-        
+
+
     }
 }
 
@@ -1155,17 +1159,17 @@ PerformAIDriverActions will use the AI Driver's reasoner to perform an Action
 */
 void GameController::PerformAIDriverActions(float dt)
 {
-  
+
     //upcoming track details
 
 
-    for (int d=0;d< drivers.size();d++)
+    for (int d = 0;d < drivers.size();d++)
     {
 
         if (!cars[d].isActive)
             continue;
 
-        
+
         drivers[d]->Update(dt);
     }
 
@@ -1187,36 +1191,35 @@ void GameController::LogRaceResults()
 
     const std::string timestampString = std::format("{:%Y-%m-%d_%H-%M-%S}", localTime);
 
-  
-    /*TODO - implement CSV file writing
 
-    The vectors 'cars' and 'drivers' will contain the cars and drivers in the race
-    Both should be equal in length
-    See ShowRaceResults for example of accessing race data
-    Driver version is not stored in the objects, but can be set as desired
+    // open a file with the timestamp in the name so runs never overwrite each other
+    const std::string fileName = "race_results_" + timestampString + ".csv";
+    std::ofstream resultsFile(fileName);
 
-    */
+    if (!resultsFile.is_open())
+    {
+        std::cout << "ERROR - could not open race results file " << fileName << std::endl;
+        return;
+    }
 
+    // column headers
+    resultsFile << "DriverID,DriverVersion,RaceCompleteTime,TotalCollisions" << std::endl;
 
-    /*PSEUDOCODE
-      
-    OPEN file with name incorporating timestamp
-    
-    WRITE column headers
+    // driver version is not stored in the objects, change this each time you change an AI
+    const std::string driverVersion = "0.1";
 
-    FOR each Driver:
-        Construct string with driver data seperated by comma
-        Write row with driver data
-       
+    // one row per driver
+    for (int i = 0; i < drivers.size() && i < cars.size(); i++)
+    {
+        resultsFile << drivers[i]->GetActorID() << ","
+            << driverVersion << ","
+            << cars[i].finishTime << ","
+            << cars[i].collisionCount << std::endl;
+    }
 
-    CLOSE File
+    resultsFile.close();
 
-    */
-
-
-
-
-
+    std::cout << "Race results saved to " << fileName << std::endl;
 
 }
 /*
@@ -1226,7 +1229,7 @@ void GameController::ShowRaceResults()
 {
     std::cout << "Race Results " << std::endl;
 
-    for (int i=0;i<cars.size();i++)
+    for (int i = 0;i < cars.size();i++)
     {
         std::cout << "Diver " << drivers[i]->GetActorID() << " - Car Time " << cars[i].finishTime << " Collisions " << cars[i].collisionCount << std::endl;
     }
@@ -1240,7 +1243,7 @@ void GameController::Update(float _dt)
 {
 
     if (gameRunning)
-    {     
+    {
 
         dt = _dt;
 
@@ -1276,14 +1279,14 @@ COLLISION AND STATUS
 */
 void GameController::CheckHazardCollisions()
 {
-       // if car in same segment as hazard, collide
+    // if car in same segment as hazard, collide
 
     for (auto& c : cars)
     {
         if (!c.isActive)
             continue;
 
-        int _curSegment = track.SegmentIndexAt(c.z) ;
+        int _curSegment = track.SegmentIndexAt(c.z);
 
         if (c.isActiveCollision && _curSegment > c.lastCollisionSegment) {
             //car has moved past point of recent collision
@@ -1291,13 +1294,13 @@ void GameController::CheckHazardCollisions()
             c.isSkidding = false;
         }
 
-        for (auto s : track.segments[_curSegment% track.segments.size()].sprites)
+        for (auto s : track.segments[_curSegment % track.segments.size()].sprites)
         {
-                
+
             // only Oil, Bollard and Trash are obstacles, other items (bushes etc are decorative)
             if (s.type == ObstacleType::Oil || s.type == ObstacleType::Bollard || s.type == ObstacleType::Trash)
             {
-       
+
                 float obstacleX = s.offsetX * roadHalfWidth;
                 float carX = c.x * roadHalfWidth;
                 float xDif = abs(carX - obstacleX);
@@ -1305,7 +1308,7 @@ void GameController::CheckHazardCollisions()
                 // car within collision distance of obstacle
                 if (xDif < collideDistance)
                 {
-                   
+
                     // is a new collision
                     if (_curSegment > c.lastCollisionSegment) {
 
@@ -1330,7 +1333,7 @@ void GameController::CheckHazardCollisions()
                         }
 
                     }
-                   
+
                 }
                 else
                 {
@@ -1350,5 +1353,3 @@ void GameController::CheckHazardCollisions()
     }
 
 }
-
-

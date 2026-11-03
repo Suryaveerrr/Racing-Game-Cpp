@@ -43,7 +43,7 @@ void AIConstructor_RBS::DefineActions()
 		else if (curXpos < -0.2)
 			actor->Turn(0.05f);
 
-		
+
 		actor->Accel(20.f);
 
 
@@ -53,7 +53,7 @@ void AIConstructor_RBS::DefineActions()
 
 	// Link the function to an identifier
 	AddActionByName("ActionAccel", accelFunction);
-	
+
 
 }
 
@@ -69,6 +69,7 @@ void AIConstructor_RBS::DefineConsiderations()
 	// is there an obstacle of any type in reactDistance
 	auto cObstacle = [](AIBrainBlackboardBase& bb) -> bool {
 
+		// NOTE: keep this the same value as in cNotObstacle below
 		int reactDistance = 10;
 
 		// get all collision types from blackboard
@@ -89,7 +90,7 @@ void AIConstructor_RBS::DefineConsiderations()
 				return true;
 			}
 		}
-	
+
 		for (auto c : _bollard)
 		{
 			if (std::abs(c.x - curX) < _collideDist && c.y <= reactDistance)
@@ -120,6 +121,7 @@ void AIConstructor_RBS::DefineConsiderations()
 
 	auto cNotObstacle = [](AIBrainBlackboardBase& bb) -> bool {
 
+		// NOTE: keep this the same value as in cObstacle above
 		int reactDistance = 10;
 
 		// get all collision types from blackboard
@@ -131,7 +133,7 @@ void AIConstructor_RBS::DefineConsiderations()
 		bool obstacleInPath = false;
 		float curX = bb.GetValue<float>("TrackXPos");
 		float _collideDist = 0.1f;
-		
+
 		for (auto c : _oil)
 		{
 			if (abs(c.x - curX) < _collideDist && c.y <= reactDistance)
@@ -176,10 +178,7 @@ void AIConstructor_RBS::DefineOptions()
 
 	AddOptionByName("OptionAvoid", "ActionAvoid");
 	AddOptionByName("OptionAccel", "ActionAccel");
-	
+
 	AddOptionConsideration("OptionAvoid", "ConsiderationObstacle");
 	AddOptionConsideration("OptionAccel", "ConsiderationNOTObstacle");
 }
-
-
-

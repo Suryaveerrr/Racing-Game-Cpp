@@ -48,7 +48,7 @@ struct Track {
 	float segmentLength;
 
 	float TotalLength() {
-		return segmentLength* segments.size();
+		return segmentLength * segments.size();
 	}
 
 	int SegmentIndexAt(float pos)
@@ -102,7 +102,7 @@ public:
 
 	// the type of AI controlling the Drivers
 	enum class AIControllerType {
-		FSM=0, RBS, DT, BT, MCTS, GOAP
+		FSM = 0, RBS, DT, BT, MCTS, GOAP
 	};
 
 	enum GameMode {
@@ -187,7 +187,7 @@ private:
 	//overall setup
 	const int numCars = 2;
 	const int trackLength = 400; // segments in track
-		
+
 	//screen config
 	const float screenW = 1024; // screen pixels
 	const float screenH = 640; // screen pixels
@@ -205,7 +205,7 @@ private:
 	const int drawDistanceInSegments = 200; // world units
 	const int segmentLen = 200; // world units
 	const float rumbleWidth = 32.f; // world units
-	const float aiMaxSpeed = 1300.f; 
+	const float aiMaxSpeed = 1300.f;
 	const float aiMinSpeed = 1.f;
 
 	const int aiLookAheadDistance = 20;// how many segments ahead the AI has knowledge of
@@ -251,10 +251,10 @@ private:
 
 	RenderContext renderContext;
 	LevelData levelData;
-	
+
 
 	// Set the track to be ued in the race
-	TrackData trackSelected = TrackData::Track1; // Track1, Track2, Track3
+	TrackData trackSelected = TrackData::Track2; // Track1, Track2, Track3
 
 	// Graphics
 	sf::Font font;
@@ -275,7 +275,7 @@ private:
 
 
 	sf::Texture textureBackground;
-	sf::Sprite *backgroundSprite;
+	sf::Sprite* backgroundSprite;
 
 	sf::Color grassColA;
 	sf::Color grassColB;
@@ -290,5 +290,3 @@ private:
 
 	float carTrackY = 0;
 };
-
-
